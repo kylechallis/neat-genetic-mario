@@ -853,43 +853,42 @@ function displayGenome(genome)
 end
 
 function writeFile(filename)
-        local file = io.open(filename, "w")
-        file:write(pool.generation .. "\n")
-        file:write(pool.maxFitness .. "\n")
-        file:write(#pool.species .. "\n")
-        for n,species in pairs(pool.species) do
-                file:write(species.topFitness .. "\n")
-                file:write(species.staleness .. "\n")
-                file:write(#species.genomes .. "\n")
-                for m,genome in pairs(species.genomes) do
-                        file:write(genome.fitness .. "\n")
-                        file:write(genome.maxneuron .. "\n")
-                        for mutation,rate in pairs(genome.mutationRates) do
-                                file:write(mutation .. "\n")
-                                file:write(rate .. "\n")
-                        end
-                        file:write("done\n")
-                        
-                        file:write(#genome.genes .. "\n")
-                        for l,gene in pairs(genome.genes) do
-                                file:write(gene.into .. " ")
-                                file:write(gene.out .. " ")
-                                file:write(gene.weight .. " ")
-                                file:write(gene.innovation .. " ")
-                                if(gene.enabled) then
-                                        file:write("1\n")
-                                else
-                                        file:write("0\n")
-                                end
-                        end
-                end
-        end
-        file:close()
+	local file = io.open(filename, "w")
+	file:write(pool.generation .. "\n")
+	file:write(pool.maxFitness .. "\n")
+	file:write(#pool.species .. "\n")
+	for n, species in pairs(pool.species) do
+		file:write(species.topFitness .. "\n")
+		file:write(species.staleness .. "\n")
+		file:write(#species.genomes .. "\n")
+		for m, genome in pairs(species.genomes) do
+			file:write(genome.fitness .. "\n")
+			file:write(genome.maxneuron .. "\n")
+			for mutation, rate in pairs(genome.mutationRates) do
+				file:write(mutation .. "\n")
+				file:write(rate .. "\n")
+			end
+			file:write("done\n")
+
+			file:write(#genome.genes .. "\n")
+			for l, gene in pairs(genome.genes) do
+				file:write(gene.into .. " ")
+				file:write(gene.out .. " ")
+				file:write(gene.weight .. " ")
+				file:write(gene.innovation .. " ")
+				if (gene.enabled) then
+					file:write("1\n")
+				else
+					file:write("0\n")
+				end
+			end
+		end
+	end
+	file:close()
 end
 
 function savePool()
 	local filename = forms.gettext(saveLoadFile)
-	print(filename)
 	writeFile(filename)
 end
 
@@ -906,56 +905,58 @@ function mysplit(inputstr, sep)
 end
 
 function loadFile(filename)
-	print("Loading pool from " .. filename)
-        local file = io.open(filename, "r")
-        pool = newPool()
-        pool.generation = file:read("*number")
-        pool.maxFitness = file:read("*number")
-        forms.settext(MaxLabel, "Max Fitness: " .. math.floor(pool.maxFitness))
-        local numSpecies = file:read("*number")
-        for s=1,numSpecies do
-                local species = newSpecies()
-                table.insert(pool.species, species)
-                species.topFitness = file:read("*number")
-                species.staleness = file:read("*number")
-                local numGenomes = file:read("*number")
-                for g=1,numGenomes do
-                        local genome = newGenome()
-                        table.insert(species.genomes, genome)
-                        genome.fitness = file:read("*number")
-                        genome.maxneuron = file:read("*number")
-                        local line = file:read("*line")
-                        while line ~= "done" do
-
-                                genome.mutationRates[line] = file:read("*number")
-                                line = file:read("*line")
-                        end
-                        local numGenes = file:read("*number")
-                        for n=1,numGenes do
-				
-                                local gene = newGene()
-                                local enabled
+	local file = io.open(filename, "r")
+	pool = newPool()
+	pool.generation = file:read("*number")
+	pool.maxFitness = file:read("*number")
+	forms.settext(MaxLabel, "Max Fitness: " .. math.floor(pool.maxFitness))
+	local numSpecies = file:read("*number")
+	for s = 1, numSpecies do
+		local species = newSpecies()
+		table.insert(pool.species, species)
+		species.topFitness = file:read("*number")
+		species.staleness = file:read("*number")
+		local numGenomes = file:read("*number")
+		for g = 1, numGenomes do
+			local genome = newGenome()
+			table.insert(species.genomes, genome)
+			genome.fitness = file:read("*number")
+			genome.maxneuron = file:read("*number")
+			local line = file:read("*line")
+			while line ~= "done" do
+				genome.mutationRates[line] = file:read("*number")
+				line = file:read("*line")
+			end
+			local numGenes = file:read("*number")
+			for n = 1, numGenes do
+				local gene = newGene()
+				local enabled
 								
 				gene.into, gene.out, gene.weight, gene.innovation, enabled = file:read("*number", "*number", "*number", "*number", "*number")
+				-- local geneStr = file:read("*line")
+				-- local geneArr = mysplit(geneStr)
+				-- gene.into = tonumber(geneArr[1])
+				-- gene.out = tonumber(geneArr[2])
+				-- gene.weight = tonumber(geneArr[3])
+				-- gene.innovation = tonumber(geneArr[4])
+				-- enabled = tonumber(geneArr[5])
 
-                                if enabled == 0 then
-                                        gene.enabled = false
-                                else
-                                        gene.enabled = true
-                                end
-                                
-								table.insert(genome.genes, gene)
-                        end
-                end
-        end
-        file:close()
-        
-        while fitnessAlreadyMeasured() do
-                nextGenome()
-        end
-        initializeRun()
-        pool.currentFrame = pool.currentFrame + 1
-		print("Pool loaded.")
+				if enabled == 0 then
+					gene.enabled = false
+				else
+					gene.enabled = true
+				end
+				table.insert(genome.genes, gene)
+			end
+		end
+	end
+	file:close()
+
+	while fitnessAlreadyMeasured() do
+		nextGenome()
+	end
+	initializeRun()
+	pool.currentFrame = pool.currentFrame + 1
 end
 
 function flipState()

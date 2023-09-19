@@ -49,8 +49,8 @@ Did some miscellaneous house-keeping, like moving global config settings into th
 
 ## Instructions
 1. Install [BizHawk](https://github.com/TASVideos/BizHawk) prerequesites & emulator:
-   1. [BizHawk prerequesites (currently 2.1)](https://github.com/TASVideos/BizHawk-Prereqs/releases)
-   2. [BizHawk (currently 2.2.2)](https://github.com/TASVideos/BizHawk/releases)
+   1. [BizHawk prerequesites (>= 2.1 supported)](https://github.com/TASVideos/BizHawk-Prereqs/releases)
+   2. [BizHawk (>= 2.2.2 supported, but save files won't work in some versions before 2.7)](https://github.com/TASVideos/BizHawk/releases)
 2. Get the rom of [Super Mario World (USA)](https://www.google.de/search?q=Super+Mario+World+(USA).sfc). (Other Super Mario World roms might work too but are not tested)
 
 CRC | MD5 | SHA1
